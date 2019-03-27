@@ -21,6 +21,7 @@ module ICU
             '/usr/{lib64,lib}',
             '/usr/lib/x86_64-linux-gnu', # for Debian Multiarch http://wiki.debian.org/Multiarch
             '/usr/lib/i386-linux-gnu',   # for Debian Multiarch
+            '/usr/local/opt/icu4c/lib',  # for macOS using icu4c
           ]
         end
       end
@@ -39,7 +40,9 @@ module ICU
                     [find_lib("libicui18n.#{FFI::Platform::LIBSUFFIX}.??"),
                      find_lib("libicutu.#{FFI::Platform::LIBSUFFIX}.??")]
                   when :osx
-                    [find_lib("libicucore.#{FFI::Platform::LIBSUFFIX}")]
+                    [find_lib("libicui18n.#{FFI::Platform::LIBSUFFIX}"),
+                     find_lib("libicutu.#{FFI::Platform::LIBSUFFIX}"),
+                     find_lib("libicucore.#{FFI::Platform::LIBSUFFIX}")]
                   when :linux
                     [find_lib("libicui18n.#{FFI::Platform::LIBSUFFIX}.??"),
                      find_lib("libicutu.#{FFI::Platform::LIBSUFFIX}.??")]
@@ -87,6 +90,7 @@ module ICU
       #
       # OSX:
       #   u_errorName
+      #   u_errorName_63 //e.g. if installed via homebrew using icu4c
       #
       # CentOS 5
       #   u_errorName_3_6
@@ -98,6 +102,9 @@ module ICU
 
       # Here are the possible suffixes
       suffixes = [""]
+      if ENV['FFI_ICU_VERSION_SUFFIX']
+         suffixes << ENV['FFI_ICU_VERSION_SUFFIX']
+      end
       if version
         suffixes << "_#{version}" << "_#{version[0].chr}_#{version[1].chr}" << "_#{version.split('.')[0]}"
       end
@@ -279,6 +286,7 @@ module ICU
     #
 
     attach_function :ucol_open,             "ucol_open#{suffix}",             [:string,    :pointer], :pointer
+    attach_function :ucol_openRules,        "ucol_openRules#{suffix}",        [:pointer,    :int, :int, :int, :pointer, :pointer], :pointer
     attach_function :ucol_close,            "ucol_close#{suffix}",            [:pointer],  :void
     attach_function :ucol_strcoll,          "ucol_strcoll#{suffix}",          [:pointer,   :pointer,  :int32_t,  :pointer, :int32_t], :int
     attach_function :ucol_getKeywords,      "ucol_getKeywords#{suffix}",      [:pointer],  :pointer

@@ -28,10 +28,18 @@ module ICU
 
     class Collator
       ULOC_VALID_LOCALE = 1
+      UCOL_DEFAULT = -1
+      UCOL_ON = 17
+      UCOL_PRIMARY = 0
 
       def initialize(locale)
-        ptr = Lib.check_error { |error| Lib.ucol_open(locale, error) }
-        @c = FFI::AutoPointer.new(ptr, Lib.method(:ucol_close))
+        if locale == "bo"
+          bo_rules = File.read(File.join(__dir__, "/collation_rules/bo_rules.txt"))
+          self.set_rules(bo_rules)
+        else
+          ptr = Lib.check_error { |error| Lib.ucol_open(locale, error) }
+          @c = FFI::AutoPointer.new(ptr, Lib.method(:ucol_close))
+        end
       end
 
       def locale
@@ -83,6 +91,11 @@ module ICU
           ptr = ICU::Lib.ucol_getRules(@c, length)
           ptr.read_array_of_uint16(length.read_int).pack("U*")
         end
+      end
+
+      def set_rules(string)
+        ptr = Lib.check_error { |error| ICU::Lib.ucol_openRules(UCharPointer.from_string(string),string.jlength, UCOL_ON, UCOL_PRIMARY, nil, error) }
+        @c = FFI::AutoPointer.new(ptr, Lib.method(:ucol_close))
       end
     end # Collator
 
