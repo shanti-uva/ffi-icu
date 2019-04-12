@@ -1,3 +1,5 @@
+require 'date'
+require 'time'
 
 module ICU
   module TimeFormatting
@@ -117,10 +119,10 @@ module ICU
 
         begin
           Lib.check_error do |error|
-            case dt
-            when Date
+            case 
+            when dt.instance_of?(Date)
               needed_length = Lib.udat_format(@f, Time.mktime( dt.year, dt.month, dt.day, 0, 0, 0, 0 ).to_f * 1000.0, out_ptr, needed_length, nil, error)
-            when Time
+            when dt.instance_of?(Time)
               needed_length = Lib.udat_format(@f, dt.to_f * 1000.0, out_ptr, needed_length, nil, error)
             end
           end

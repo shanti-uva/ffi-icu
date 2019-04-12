@@ -68,7 +68,7 @@ module ICU
             case number
             when Float
               needed_length = Lib.unum_format_double(@f, number, out_ptr, needed_length, nil, error)
-            when Fixnum
+            when Integer
               needed_length = Lib.unum_format_int32(@f, number, out_ptr, needed_length, nil, error)
             when BigDecimal
               string_version = number.to_s('F')
