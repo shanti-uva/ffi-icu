@@ -4,7 +4,7 @@ module ICU
   module NumberFormatting
     @default_options = {}
     
-    def self.create(locale, type = :decimal, options = {})
+    def self.create(locale, type = :decimal, **options)
       case type
       when :currency
         CurrencyFormatter.new(locale, options.delete(:style)).set_attributes(@default_options.merge(options))
@@ -17,24 +17,24 @@ module ICU
       @default_options.clear
     end
 
-    def self.set_default_options(options)
+    def self.set_default_options(**options)
       @default_options.merge!(options)
     end
 
-    def self.format_number(locale, number, options = {})
-      create(locale, :decimal, options).format(number)
+    def self.format_number(locale, number, **options)
+      create(locale, :decimal, **options).format(number)
     end
 
-    def self.format_percent(locale, number, options = {})
-      create(locale, :percent, options).format(number)
+    def self.format_percent(locale, number, **options)
+      create(locale, :percent, **options).format(number)
     end
 
-    def self.format_currency(locale, number, currency, options = {})
-      create(locale, :currency, options).format(number, currency)
+    def self.format_currency(locale, number, currency, **options)
+      create(locale, :currency, **options).format(number, currency)
     end
 
-    def self.spell(locale, number, options = {})
-      create(locale, :spellout, options).format(number)
+    def self.spell(locale, number, **options)
+      create(locale, :spellout, **options).format(number)
     end
 
     class BaseFormatter

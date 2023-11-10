@@ -41,7 +41,7 @@ module ICU
     }
     @default_options = {}
     
-    def self.create(options = {})
+    def self.create(**options)
       DateTimeFormatter.new(@default_options.merge(options))
     end
 
@@ -53,7 +53,7 @@ module ICU
       @default_options.merge!(options)
     end
 
-    def self.format(dt, options = {})
+    def self.format(dt, **options)
       create(@default_options.merge(options)).format(dt)
     end
 
@@ -86,7 +86,7 @@ module ICU
     end
 
     class DateTimeFormatter < BaseFormatter
-      def initialize(options={})
+      def initialize(**options)
         time_style = options[:time]   || :short
         date_style = options[:date]   || :short
         locale     = options[:locale] || 'C'
