@@ -12,6 +12,12 @@ module ICU
       it 'collates an array of strings' do
         expect(collator.collate(['å', 'ø', 'æ'])).to(eq(['æ', 'ø', 'å']))
       end
+      
+      it "should collate an array of Tibetan strings" do
+        bo_collator = Collator.new("bo")
+        x = ['ཆོས་', 'ཀ', 'དཀོན་','རྐ']
+        expect(bo_collator.collate(x)).to eq ['ཀ', 'དཀོན་','རྐ','ཆོས་']
+      end
 
       it 'raises an error if argument does not respond to :sort' do
         expect { collator.collate(1) }.to(raise_error(ArgumentError))

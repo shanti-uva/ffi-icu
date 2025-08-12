@@ -47,7 +47,9 @@ module ICU
           elsif Gem::Version.new(`sw_vers -productVersion`) >= Gem::Version.new('11')
             ["libicucore.#{FFI::Platform::LIBSUFFIX}"]
           else
-            [find_lib("libicucore.#{FFI::Platform::LIBSUFFIX}")]
+            [find_lib("libicui18n.#{FFI::Platform::LIBSUFFIX}"),
+             find_lib("libicutu.#{FFI::Platform::LIBSUFFIX}"),
+             find_lib("libicucore.#{FFI::Platform::LIBSUFFIX}")]
           end
         when :windows
           [find_lib("{lib,}icuuc??.#{FFI::Platform::LIBSUFFIX}"),
@@ -105,6 +107,9 @@ module ICU
 
       # Here are the possible suffixes
       suffixes = ['']
+      if ENV['FFI_ICU_VERSION_SUFFIX']
+        suffixes << ENV['FFI_ICU_VERSION_SUFFIX']
+      end
       suffixes << "_#{version}" << "_#{version[0].chr}_#{version[1].chr}" << "_#{version.split('.')[0]}" if version
 
       # Try to find the u_errorName function using the possible suffixes
@@ -325,6 +330,7 @@ module ICU
     #
 
     attach_function :ucol_open,             "ucol_open#{suffix}",             [:string, :pointer], :pointer
+    attach_function :ucol_openRules,        "ucol_openRules#{suffix}",        [:pointer,    :int, :int, :int, :pointer, :pointer], :pointer
     attach_function :ucol_close,            "ucol_close#{suffix}",            [:pointer], :void
     attach_function :ucol_strcoll,          "ucol_strcoll#{suffix}",
                     [:pointer, :pointer, :int32_t, :pointer, :int32_t], :int
