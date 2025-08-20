@@ -8,15 +8,15 @@ module ICU
 
     describe Collator do
       let(:collator) { described_class.new('nb') }
+      let(:bo_collator) { described_class.new('bo') }
 
       it 'collates an array of strings' do
         expect(collator.collate(['å', 'ø', 'æ'])).to(eq(['æ', 'ø', 'å']))
       end
       
-      let(:bo_collator) { described_class.new('bo') }
-      it 'should collate an array of Tibetan strings' do
+      it 'collates an array of Tibetan strings' do
         x = ['ཆོས་', 'ཀ', 'དཀོན་', 'རྐ']
-        expect(bo_collator.collate(x)).to eq ['ཀ', 'དཀོན་','རྐ','ཆོས་']
+        expect(bo_collator.collate(x)).to eq ['ཀ', 'དཀོན་', 'རྐ', 'ཆོས་']
       end
 
       it 'raises an error if argument does not respond to :sort' do
