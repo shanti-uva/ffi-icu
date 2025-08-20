@@ -325,7 +325,7 @@ module ICU
     #
 
     attach_function :ucol_open,             "ucol_open#{suffix}",             [:string, :pointer], :pointer
-    attach_function :ucol_openRules,        "ucol_openRules#{suffix}",        [:pointer,    :int, :int, :int, :pointer, :pointer], :pointer
+    attach_function :ucol_openRules,        "ucol_openRules#{suffix}",        [:pointer, :int, :int, :int, :pointer, :pointer], :pointer
     attach_function :ucol_close,            "ucol_close#{suffix}",            [:pointer], :void
     attach_function :ucol_strcoll,          "ucol_strcoll#{suffix}",
                     [:pointer, :pointer, :int32_t, :pointer, :int32_t], :int

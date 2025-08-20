@@ -13,9 +13,9 @@ module ICU
         expect(collator.collate(['å', 'ø', 'æ'])).to(eq(['æ', 'ø', 'å']))
       end
       
-      it "should collate an array of Tibetan strings" do
-        bo_collator = Collator.new("bo")
-        x = ['ཆོས་', 'ཀ', 'དཀོན་','རྐ']
+      let(:bo_collator) { described_class.new('bo') }
+      it 'should collate an array of Tibetan strings' do
+        x = ['ཆོས་', 'ཀ', 'དཀོན་', 'རྐ']
         expect(bo_collator.collate(x)).to eq ['ཀ', 'དཀོན་','རྐ','ཆོས་']
       end
 
