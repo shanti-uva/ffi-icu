@@ -66,9 +66,16 @@ module ICU
       UCOL_PRIMARY = 0
 
       def initialize(locale)
-        if locale == "bo"
-          bo_rules = File.read(File.join(__dir__, "/collation_rules/bo_rules.txt"))
-          self.set_rules(bo_rules)
+        case locale
+        when 'bo'
+          rules = File.read(File.join(__dir__, "/collation_rules/bo_rules.txt"))
+          self.set_rules(rules)
+        when 'new-Deva'
+          rules = File.read(File.join(__dir__, "/collation_rules/new-Deva_rules.txt"))
+          self.set_rules(rules)
+        when 'new Newa'
+          rules = File.read(File.join(__dir__, "/collation_rules/new-Newa_rules.txt"))
+          self.set_rules(rules)
         else
           ptr = Lib.check_error { |error| Lib.ucol_open(locale, error) }
           @c = FFI::AutoPointer.new(ptr, Lib.method(:ucol_close))
@@ -164,7 +171,7 @@ module ICU
       end
       
       def set_rules(string)
-        ptr = Lib.check_error { |error| ICU::Lib.ucol_openRules(UCharPointer.from_string(string),string.jlength, UCOL_ON, UCOL_PRIMARY, nil, error) }
+        ptr = Lib.check_error { |error| ICU::Lib.ucol_openRules(UCharPointer.from_string(string),string.mb_chars.length, UCOL_ON, UCOL_PRIMARY, nil, error) }
         @c = FFI::AutoPointer.new(ptr, Lib.method(:ucol_close))
       end
     end

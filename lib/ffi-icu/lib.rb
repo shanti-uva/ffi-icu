@@ -47,9 +47,7 @@ module ICU
           elsif Gem::Version.new(`sw_vers -productVersion`) >= Gem::Version.new('11')
             ["libicucore.#{FFI::Platform::LIBSUFFIX}"]
           else
-            [find_lib("libicui18n.#{FFI::Platform::LIBSUFFIX}"),
-             find_lib("libicutu.#{FFI::Platform::LIBSUFFIX}"),
-             find_lib("libicucore.#{FFI::Platform::LIBSUFFIX}")]
+            [find_lib("libicucore.#{FFI::Platform::LIBSUFFIX}")]
           end
         when :windows
           [find_lib("{lib,}icuuc??.#{FFI::Platform::LIBSUFFIX}"),
@@ -107,9 +105,6 @@ module ICU
 
       # Here are the possible suffixes
       suffixes = ['']
-      if ENV['FFI_ICU_VERSION_SUFFIX']
-        suffixes << ENV['FFI_ICU_VERSION_SUFFIX']
-      end
       suffixes << "_#{version}" << "_#{version[0].chr}_#{version[1].chr}" << "_#{version.split('.')[0]}" if version
 
       # Try to find the u_errorName function using the possible suffixes
